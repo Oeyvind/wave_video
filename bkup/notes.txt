@@ -1,0 +1,5 @@
+* frame diff
+* edge detection?
+* contour detection? 
+    - how to get countours and draw them?
+    cv2.findContours
