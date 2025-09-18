@@ -3,7 +3,8 @@ import numpy as np
 import imutils
 
 # Open the video file
-cap = cv2.VideoCapture("Nidelv_brygger3.mp4")
+#cap = cv2.VideoCapture("Nidelv_brygger3.mp4")
+cap = cv2.VideoCapture("inderoy_pool_2.mp4")
 ret, current_frame = cap.read()
 previous_frame = current_frame
 dimensions = current_frame.shape

@@ -1,0 +1,93 @@
+* Action plans 09/2025
+    * Sound instruments
+        - what are interesting sounds ?
+        - sound transformations, not only dry synthesis
+        - use wave shape as spectral filter
+            - noise or wave sound input?
+            - voice input?
+        - granular textures
+        - rhythmic patterns
+            - modulations of rhythmic patterns
+    * Wave statistics   
+        - numpeaks
+        - peak distances
+            - max, min, average
+        - amp
+            - average, max, min
+        - curvature
+            - max, min, average
+        - roughness
+            - FFT of each column and row? 3D FFT?
+            - size and shape of texture elements
+        - num peaks per zero crossing
+        * contour extraction
+        * sparse optical flow
+            - create mask to focus on relevant area
+            - investigate corner detection: good features to track
+        * rope_fade_filter
+            - track only things that change, with IIR lowpass
+            - could also create a FIR lowpass?
+        * display of analyzed features  
+            - FFT
+            - numpeaks
+            - roughness
+            - curvature max, min    
+    * 2 or more ropes
+        - no 1D wave
+        - use open cv contours?
+            - N largest contours, size, shape, area, curvature
+    * Keep last shape when no movement
+        - also for 1D wave
+        - contours
+    * Sparks, downsampling
+        - finish map to granular sparks
+    * Better organization of sketches for exploration
+        - file naming
+        - py+csound sets
+        - better organization of source videos
+            - all videos in one folder
+            - method for reshaping/resampling different image resolutions
+            - method for different video frame rates in source
+            - method for masking based on ratios from full frame
+        - better organization of processing methods
+            - library file with processing functions
+        - directories for
+            - source videos
+            - library functions
+            - different experiments in separate folders
+                - py + csound file in each
+                - use ../video/videoname for source
+    * Rope optical flow
+    * Wave pool Inderøy as source
+    * Write wave statistics to image for output
+        - allow pause and investigate
+        
+
+
+
+
+* Extract 1D waveform. Working
+* Peak id and peak tracking. Working
+
+* Simple audio mapping shows that it works, but sounds too simple and naive.
+    - maybe tracking each single wave (form and shape) is not the thing
+* Use more complex sonification/synthesis initially, even if it is less direct and concrete
+    - granular processes, additive textures, modulations
+    - anything that sounds good and that can bee modulated
+
+* Taking a step back
+    - Extract more general features, how does it look?
+    - number of items/things/features moving around. Wave frequency
+    - general shape (even of the 1D wave), 
+        - smoothness/curvature (Timbre)
+        - number of waves, distance between shapes (Frequency)
+        * simplify rope tracking to just extract general statistics of the 1D wave
+    - downsample heavily (16x12), create big pixels, simply track change (threshold)
+        - trigger short noise click on each
+
+* Open CV feature descriptors
+    https://docs.opencv.org/2.4/modules/nonfree/doc/feature_detection.html#surf
+    "how would I extract textures and wave shapes from a video using open cv in python"
+    - Local Binary Patterns (LBP): LBP is a robust texture descriptor that creates a binary pattern for each pixel based on its neighbors.
+    - Gabor Filters: Gabor filters are useful for detecting specific orientations and frequencies in textures.
+    - lbp_image = local_binary_pattern(gray_frame, n_points, radius, method="uniform")

@@ -7,6 +7,7 @@ import time
 timethen = time.time()
 
 cap = cv2.VideoCapture("rope_2.mp4")
+#cap = cv2.VideoCapture("rope_ximea_1.mp4")
 ret, current_frame = cap.read()
 previous_frame = current_frame
 dimensions = current_frame.shape
@@ -436,7 +437,7 @@ try:
         # timing, frame rate
         time_now = time.time()
         processing_time = (time_now - time_start)*1000
-        fps = 4
+        fps = 20
         frame_time = 1000/fps
         wait_time = int(frame_time - processing_time)
         if wait_time < 1: wait_time = 1

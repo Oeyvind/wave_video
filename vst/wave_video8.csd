@@ -377,13 +377,15 @@ instr 10
   ; read ftable waveform with oscillator
   itab = p4
   kfreq chnget "Freq"
+  knumpeaks chnget "numpeaks"
+  kfreq *= (knumpeaks+1)
   kamp_dB chnget "Amp"
   kamp = ampdbfs(kamp_dB)
-  aphase phasor kfreq
-  aphase *= 1024
-  a1 table3 aphase, itab
-  a1 *= kamp
-  outs a1, a1
+  a1 poscil kamp, kfreq
+  a2 tablei a1*0.5, itab, 1, 0.5, 0 ;
+  a2 dcblock a2 ; prevent constant offset
+  a2 *= kamp
+  outs a2, a2
 endin
 
 instr 11
