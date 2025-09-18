@@ -812,6 +812,7 @@ instr 112
 endin
 */
 
+#include "lsys_cs_midi.inc"
 
 </CsInstruments>  
 <CsScore>

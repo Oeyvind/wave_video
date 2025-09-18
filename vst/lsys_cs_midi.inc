@@ -384,12 +384,3 @@ instr	201
   endif
   end:
 endin
-;*********************************************************************
-
-</CsInstruments>
-<CsScore>
-f0 86400
-i1 0 86400 ; gui handling
-i30 0 86400 ; global lfo
-</CsScore>
-</CsoundSynthesizer>
