@@ -1,33 +1,33 @@
 <Cabbage>
 form size(900, 510), caption("Stats rope"), pluginId("str8"), guiMode("queue"), colour(30,30,30)
-rslider channel("Freq_wav"),          bounds(10,  10, 60, 60), text("Freq"), range(20, 2000, 100, 0.35)
-rslider channel("Amp_wav"),           bounds(70,  10, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Freq_wav"),          bounds(10,  10, 60, 60), text("Freq"), range(20, 300, 100, 0.35)
+rslider channel("Amp_wav"),           bounds(70,  10, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("detune_wav"),        bounds(130, 10, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
 button channel("Wave_raw_on"),        bounds(190, 10, 68, 30), text("Wraw_On"), colour:0("black"), colour:1("green")
 button channel("Wave_fine_on"),       bounds(260, 10, 70, 30), text("Wfine_On"), colour:0("black"), colour:1("green")
 
-rslider channel("Freq_wavd"),          bounds(10,  80, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_wavd"),           bounds(70,  80, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Freq_wavd"),          bounds(10,  80, 60, 60), text("Freq"), range(80, 2000, 100, 0.35)
+rslider channel("Amp_wavd"),           bounds(70,  80, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("detune_wavd"),        bounds(130, 80, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
 button channel("Wave_raw_detune_on"), bounds(190, 80, 68, 30), text("Wrawd_On"), colour:0("black"), colour:1("green")
 button channel("Wave_fine_detune_on"),bounds(260, 80, 70, 30), text("Wfined_On"), colour:0("black"), colour:1("green")
 
-rslider channel("Freq_fft"),          bounds(10,  150, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_fft"),           bounds(70,  150, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Freq_fft"),          bounds(10,  150, 60, 60), text("Freq"), range(130, 2000, 100, 0.35)
+rslider channel("Amp_fft"),           bounds(70,  150, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("detune_fft"),        bounds(130, 150, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
 rslider channel("chroma_fft"),        bounds(190, 150, 60, 60), text("Chroma"), range(-1, 1, 0.1)
 rslider channel("dist_fft"),          bounds(250, 150, 60, 60), text("Dist"), range(0, 1, 0.1, 0.35)
 button channel("Fft_bank"),           bounds(320, 150, 70, 30), text("FFT bank"), colour:0("black"), colour:1("green")
 
-rslider channel("Freq_fadr"),         bounds(10,  230, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_fadr"),          bounds(70,  230, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Freq_fadr"),         bounds(10,  230, 60, 60), text("Freq"), range(60, 1000, 100, 0.35)
+rslider channel("Amp_fadr"),          bounds(70,  230, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("detune_fadr"),       bounds(130, 230, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
 rslider channel("chroma_fadr"),       bounds(190, 230, 60, 60), text("Chroma"), range(-1, 1, 0.1)
 rslider channel("dist_fadr"),         bounds(250, 230, 60, 60), text("Dist"), range(0, 1, 0.1, 0.35)
 button channel("Fader_bank"),         bounds(320, 230, 70, 30), text("Fader bank"), colour:0("black"), colour:1("green")
   
 rslider channel("Grainpitch"),        bounds(10,  300, 60, 60), text("G.pitch"), range(10, 1000, 100, 0.35)
-rslider channel("Grainamp"),          bounds(70,  300, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Grainamp"),          bounds(70,  300, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("Grate"),             bounds(130, 300, 60, 60), text("G.rate"), range(0.5, 20, 4, 0.35)
 rslider channel("Gdur"),              bounds(190, 300, 60, 60), text("G.dur"), range(0.1, 2, 1, 0.35)
 rslider channel("G_dist_rate"),       bounds(250, 300, 60, 60), text("Dist_rate"), range(0, 2, 0.1, 0.35)
@@ -35,7 +35,7 @@ rslider channel("G_voice_spread"),    bounds(310, 300, 60, 60), text("Voice_spre
 button channel("Distance_grain"),     bounds(370, 300, 70, 30), text("Dstnc_grain"), colour:0("black"), colour:1("green")
 
 rslider channel("Grainpitch2"),        bounds(10,  370, 60, 60), text("G.pitch"), range(10, 1000, 100, 0.35)
-rslider channel("Grainamp2"),          bounds(70,  370, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Grainamp2"),          bounds(70,  370, 60, 60), text("Amp"), range(-50, 6, 0, 3)
 rslider channel("Grate2"),             bounds(130, 370, 60, 60), text("G.rate"), range(0.5, 20, 4, 0.35)
 rslider channel("Gdur2"),              bounds(190, 370, 60, 60), text("G.dur"), range(0.1, 2, 1, 0.35)
 rslider channel("G2_pitchmod"),        bounds(250, 370, 60, 60), text("Pitchmod"), range(0, 2, 1, 0.35)
@@ -562,7 +562,7 @@ instr 10
   a2R dcblock a2R ; prevent constant offset
   a2L *= kamp
   a2R *= kamp
-  outch 1, a2L, 2, a2R
+  outch 1, a2L*0.3, 2, a2R*0.3
 endin
 
 instr 11
@@ -570,12 +570,13 @@ instr 11
   itab = p4
   print itab
   kfreq chnget "Freq_wavd"
-  kx_dist = gkZerocross_distance[0]
-  kfreq *= kx_dist
-  knumpeaks chnget "numpeaks"
+  ;kx_dist = gkZerocross_distance[0]
+  ;kfreq *= kx_dist
   kavg_x_movement chnget "avg_x_movement"
+  ;kfreq *= (1+kavg_x_movement)
+  knumpeaks chnget "numpeaks"
   kdetune chnget "detune_wavd"
-  kdetune *= kavg_x_movement
+  ;kdetune *= kavg_x_movement
   kfreq1 = kfreq+kfreq*(tonek(knumpeaks+1,2))*kdetune
   kfreq2 = kfreq-kfreq*(tonek(knumpeaks+1,0.7))*kdetune
   kamp_dB chnget "Amp_wavd"
@@ -602,7 +603,7 @@ instr 11
   aright = a2*0.1+a2R*0.9
   aleft lpf18 aleft, 100+(tonek(knumpeaks+1,2)*600), 0.3, 0.9
   aright lpf18 aright, 100+(tonek(knumpeaks+1,2)*600), 0.3, 0.9
-  outch 3, aleft*1.5, 4, aright*1.5
+  outch 3, aleft*0.15, 4, aright*0.15
 endin
 
 opcode DistanceGrains, a, k[]kkkkkii
@@ -728,7 +729,7 @@ instr 12
   kx_dist chnget "avg_x_distance"
   kgrainrate *= limit(1-(kx_dist)*2, 0.1, 1)
   kgraindur chnget "Gdur"
-  kamp = ampdbfs(kamp_dB)*2
+  kamp = ampdbfs(kamp_dB)
   kactivity chnget "wave_activity"
   kactivity limit kactivity, 0, 1
   kamp_env EnvFollow kactivity, 0.01, 3
@@ -740,7 +741,7 @@ instr 12
   imaxvoice = 5
   a1 DistanceGrains gkXdistance, kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, 0, imaxvoice
   a2 DistanceGrains gkZerocross_distance, kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, 0, imaxvoice
-  outch 9, a1*kamp, 10, a2*kamp
+  outch 9, a1*kamp*3, 10, a2*kamp*3
 endin
 
 opcode Graincloud, aa, kkkkkkkii
@@ -884,7 +885,7 @@ instr 13
   kpitch_spread *= kmaxfaders
   kgraindur *= (kminfaders+1)
   a1,a2 Graincloud kwavfreq, kpitchmod, kpitch_spread, kgrainrate, kratemod, kdistribution, kgraindur, 0, imaxvoice
-  outch 11, a1*kamp, 12, a2*kamp
+  outch 11, a1*kamp*1.5, 12, a2*kamp*1.5
 endin
 
 opcode OscBank, aa, k[]i[]kkkii
