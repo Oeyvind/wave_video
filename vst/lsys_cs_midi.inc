@@ -67,15 +67,19 @@ alwayson 101
 
 ; midi in handling
 instr 102
-  inum notnum
-  ivel veloc
+  inum = p4
+  ivel = p5
+  if inum == 0 then
+    inum notnum
+    ivel veloc
+  endif
   imidi1_instr = 103
   inst_num = imidi1_instr+(inum*0.001)
   krelease lastcycle
   iactive active imidi1_instr
   iactive1 active imidi1_instr+1
   iactive_ = iactive+iactive1
-  print inum, iactive
+  ;print inum, iactive
   event_i "i", imidi1_instr+iactive_, 0, -1, inum, ivel
   if (krelease > 0) then
     event "i", -(imidi1_instr+iactive_), 0, .1
@@ -101,7 +105,7 @@ instr 103
 endin
 
 instr 104
-  print p1, p2, p3
+  ;print p1, p2, p3
   inote = p4
   iroot_note chnget "root_note"
   chnset inote-iroot_note, "second_note_interval" 
@@ -113,7 +117,7 @@ instr 104
 endin
 
 instr 105
-  print p1, p2, p3
+  ;print p1, p2, p3
   inote = p4
   iroot_note chnget "root_note"
   chnset inote-iroot_note, "third_note_interval" 
@@ -149,7 +153,7 @@ instr 112
     tablew 0, index, irule 
     index += 1
   od
-  print iparent, isize
+  ;print iparent, isize
   
   i1 = 0
   while i1 < 5 do
@@ -205,7 +209,9 @@ instr 121
   ;isymbol = floor(chnget("root")+0.5)
   isymbol = chnget("root")-1
   isymbol = isymbol < 0 ? 0 : isymbol
+  print isymbol
   itempo chnget "tempo"
+  print itempo
   idelta = divz(60, itempo, 1)*8
   ilsysinstr = 122+(inote*0.01)
   imelinstr = 131+(inote*0.01)
@@ -370,9 +376,9 @@ instr	201
   ichan = igeneration == 4 ? ichan_4 : ichan
 	idur = (p3 < 0 ? 999 : p3)	; use very long duration for realtime events, noteondur will create note off when instrument stops
 	idur = (p3 < 0.1 ? 0.1 : p3)	; avoid extremely short notes as they won't play
-  if ichan == 2 then
-    print inote, ichan, igeneration, idur
-  endif
+  ;if ichan == 2 then
+  ;  print inote, ichan, igeneration, idur
+  ;endif
 	noteondur ichan, inote, ivel, idur
   if igeneration == idrum_gen then
     ichan = 10

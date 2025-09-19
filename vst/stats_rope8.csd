@@ -1,37 +1,57 @@
 <Cabbage>
 form size(900, 510), caption("Stats rope"), pluginId("str8"), guiMode("queue"), colour(30,30,30)
-rslider channel("Freq_wav"),          bounds(10, 10, 70, 70), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_wav"),           bounds(70, 10, 70, 70), text("Amp"), range(-96, 24, 0, 0.5)
-rslider channel("detune_wav"),        bounds(130, 10, 70, 70), text("Detune"), range(0, 1, 0.1, 0.35)
-button channel("Wave_raw_on"),        bounds(190, 10, 70, 30), text("Wraw_On"), colour:0("black"), colour:1("green")
-button channel("Wave_fine_on"),       bounds(270, 10, 70, 30), text("Wfine_On"), colour:0("black"), colour:1("green")
-button channel("Wave_raw_detune_on"), bounds(190, 40, 70, 30), text("Wrawd_On"), colour:0("black"), colour:1("green")
-button channel("Wave_fine_detune_on"),bounds(270, 40, 70, 30), text("Wfined_On"), colour:0("black"), colour:1("green")
+rslider channel("Freq_wav"),          bounds(10,  10, 60, 60), text("Freq"), range(20, 2000, 100, 0.35)
+rslider channel("Amp_wav"),           bounds(70,  10, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("detune_wav"),        bounds(130, 10, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
+button channel("Wave_raw_on"),        bounds(190, 10, 68, 30), text("Wraw_On"), colour:0("black"), colour:1("green")
+button channel("Wave_fine_on"),       bounds(260, 10, 70, 30), text("Wfine_On"), colour:0("black"), colour:1("green")
 
-rslider channel("Freq_fft"),          bounds(10,  90, 70, 70), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_fft"),           bounds(70,  90, 70, 70), text("Amp"), range(-96, 24, 0, 0.5)
-rslider channel("detune_fft"),        bounds(130, 90, 70, 70), text("Detune"), range(0, 1, 0.1, 0.35)
-rslider channel("chroma_fft"),        bounds(190, 90, 70, 70), text("Chroma"), range(0, 1, 0.1, 0.35)
-button channel("Fft_bank"),           bounds(270, 90, 70, 40), text("FFT bank"), colour:0("black"), colour:1("green")
+rslider channel("Freq_wavd"),          bounds(10,  80, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
+rslider channel("Amp_wavd"),           bounds(70,  80, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("detune_wavd"),        bounds(130, 80, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
+button channel("Wave_raw_detune_on"), bounds(190, 80, 68, 30), text("Wrawd_On"), colour:0("black"), colour:1("green")
+button channel("Wave_fine_detune_on"),bounds(260, 80, 70, 30), text("Wfined_On"), colour:0("black"), colour:1("green")
 
-rslider channel("Freq_fadr"),          bounds(10,  170, 70, 70), text("Freq"), range(20, 20000, 100, 0.35)
-rslider channel("Amp_fadr"),           bounds(70,  170, 70, 70), text("Amp"), range(-96, 24, 0, 0.5)
-rslider channel("detune_fadr"),        bounds(130, 170, 70, 70), text("Detune"), range(0, 1, 0.1, 0.35)
-rslider channel("chroma_fadr"),        bounds(190, 170, 70, 70), text("Chroma"), range(0, 1, 0.1, 0.35)
-button channel("Fader_bank"),         bounds(270, 170, 70, 40), text("Fader bank"), colour:0("black"), colour:1("green")
+rslider channel("Freq_fft"),          bounds(10,  150, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
+rslider channel("Amp_fft"),           bounds(70,  150, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("detune_fft"),        bounds(130, 150, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
+rslider channel("chroma_fft"),        bounds(190, 150, 60, 60), text("Chroma"), range(-1, 1, 0.1)
+rslider channel("dist_fft"),          bounds(250, 150, 60, 60), text("Dist"), range(0, 1, 0.1, 0.35)
+button channel("Fft_bank"),           bounds(320, 150, 70, 30), text("FFT bank"), colour:0("black"), colour:1("green")
+
+rslider channel("Freq_fadr"),         bounds(10,  230, 60, 60), text("Freq"), range(20, 20000, 100, 0.35)
+rslider channel("Amp_fadr"),          bounds(70,  230, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("detune_fadr"),       bounds(130, 230, 60, 60), text("Detune"), range(0, 1, 0.1, 0.35)
+rslider channel("chroma_fadr"),       bounds(190, 230, 60, 60), text("Chroma"), range(-1, 1, 0.1)
+rslider channel("dist_fadr"),         bounds(250, 230, 60, 60), text("Dist"), range(0, 1, 0.1, 0.35)
+button channel("Fader_bank"),         bounds(320, 230, 70, 30), text("Fader bank"), colour:0("black"), colour:1("green")
   
-rslider channel("Grainpitch"),        bounds(10,  170, 70, 70), text("G.pitch"), range(20, 20000, 100, 0.35)
-rslider channel("Grainamp"),          bounds(70,  250, 70, 70), text("Amp"), range(-96, 24, 0, 0.5)
-rslider channel("Grate"),             bounds(130, 250, 70, 70), text("G.rate"), range(0.5, 20, 4, 0.35)
-rslider channel("Gdur"),              bounds(190, 250, 70, 70), text("G.dur"), range(0.1, 2, 1, 0.35)
-button channel("Distance_grain"),     bounds(270, 250, 70, 40), text("Dist_grain"), colour:0("black"), colour:1("green")
+rslider channel("Grainpitch"),        bounds(10,  300, 60, 60), text("G.pitch"), range(10, 1000, 100, 0.35)
+rslider channel("Grainamp"),          bounds(70,  300, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Grate"),             bounds(130, 300, 60, 60), text("G.rate"), range(0.5, 20, 4, 0.35)
+rslider channel("Gdur"),              bounds(190, 300, 60, 60), text("G.dur"), range(0.1, 2, 1, 0.35)
+rslider channel("G_dist_rate"),       bounds(250, 300, 60, 60), text("Dist_rate"), range(0, 2, 0.1, 0.35)
+rslider channel("G_voice_spread"),    bounds(310, 300, 60, 60), text("Voice_spread"), range(0, 7, 0.1, 0.35)
+button channel("Distance_grain"),     bounds(370, 300, 70, 30), text("Dstnc_grain"), colour:0("black"), colour:1("green")
 
+rslider channel("Grainpitch2"),        bounds(10,  370, 60, 60), text("G.pitch"), range(10, 1000, 100, 0.35)
+rslider channel("Grainamp2"),          bounds(70,  370, 60, 60), text("Amp"), range(-96, 6, 0, 3)
+rslider channel("Grate2"),             bounds(130, 370, 60, 60), text("G.rate"), range(0.5, 20, 4, 0.35)
+rslider channel("Gdur2"),              bounds(190, 370, 60, 60), text("G.dur"), range(0.1, 2, 1, 0.35)
+rslider channel("G2_pitchmod"),        bounds(250, 370, 60, 60), text("Pitchmod"), range(0, 2, 1, 0.35)
+rslider channel("G2_pitch_spread"),    bounds(310, 370, 60, 60), text("Pitchspread"), range(0, 1, 0.1, 0.35)
+rslider channel("G2_ratemod"),         bounds(370, 370, 60, 60), text("Ratemod"), range(0, 2, 1, 0.35)
+button channel("Grain2"),              bounds(430, 370, 70, 30), text("Grain2"), colour:0("black"), colour:1("green")
 
-button channel("Peaks_on"), bounds(370, 20, 70, 50), text("Peaks_On"), colour:0("black"), colour:1("green")
-button channel("Print"), bounds(370, 80, 70, 50), text("Print"), colour:0("black"), colour:1("green")
+button channel("Noisebank"), bounds(480, 230, 70, 40), text("Noisbnk"), colour:0("black"), colour:1("green")
 
-button channel("Noisebank"), bounds(370, 140, 70, 50), text("Noisbnk"), colour:0("black"), colour:1("green")
-button channel("Stopchord"), bounds(370, 220, 70, 40), text("Stopchord"), colour:0("black"), colour:1("green")
+button channel("Stopchord"), bounds(640, 230, 70, 40), text("Stopchord"), colour:0("black"), colour:1("green")
+nslider channel("detune_stopchord"), bounds(715, 230, 40, 20), range(0, 1, 0.1), fontSize(14)
+nslider channel("amp_stopchord"), bounds(715, 250, 40, 20), range(-96, -10, -30), fontSize(14)
+button channel("stopchord_scalefree"), bounds(640, 273, 50, 25), text("scale"), colour:0("black"), colour:1("green")
+button channel("stopchord_minmax"), bounds(695, 273, 60, 25), text("minmax"), colour:0("black"), colour:1("green")
+
+button channel("Stop_LSYS"), bounds(800, 230, 70, 40), text("Stop_LSYS"), colour:0("black"), colour:1("green")
 
 groupbox bounds(480, 10, 410, 205), colour(75,85,90), plant("plant_lsys"), lineThickness("0"){ 
 nslider channel("generations"), bounds(5,5,40,20), range(1, 10, 3, 1, 1), fontSize(14)
@@ -95,16 +115,16 @@ checkbox channel("root_note_sibling"), bounds(5,185,15,15), value(1)
 label bounds(23,184,130,18), text("root_note_sibling"), fontSize(12), align("left")
 }
 
-csoundoutput bounds(480, 300, 410, 200)
+csoundoutput bounds(500, 300, 390, 200)
 </Cabbage>
 <CsoundSynthesizer>
 <CsOptions>
--n -d -m0 -Q0 -+rtmidi=null
+-n -d -m0 -M0 -Q0 -+rtmidi=null 
 </CsOptions>
 <CsInstruments>
 
 ksmps = 64
-nchnls = 2
+nchnls = 16
 0dbfs=1
 
 massign -1,102
@@ -155,6 +175,29 @@ opcode ButtonEvent, 0, kij
   endif
 endop
 
+opcode EnvFollow, k, kkk
+  kval, krise, kfall xin
+  kA = 0.001^(1/(krise*kr))
+  kB = 0.001^(1/(kfall*kr))
+  kfilt init 0
+  kfilt = (kval>kfilt?(kval+(kA*(kfilt-kval))):(kval+(kB*(kfilt-kval))))
+  kval = kfilt
+  xout kfilt
+endop   
+
+opcode MinArrayThresh, k, k[]k
+  kArr[],kthresh xin
+  kndx init 0
+  kmin init 9999999
+  while kndx < lenarray(kArr) do
+    if kArr[kndx] > kthresh then
+      kmin min kArr[kndx], kmin
+    endif
+    kndx += 1
+  od
+  xout kmin
+endop
+
 
 instr 1
   ; GUI control
@@ -173,6 +216,9 @@ instr 1
   kdistance_grain_on chnget "Distance_grain"
   ButtonEvent kdistance_grain_on, 12
 
+  kgrain2_on chnget "Grain2"
+  ButtonEvent kgrain2_on, 13
+
   kfft_bank_on chnget "Fft_bank"
   ButtonEvent kfft_bank_on, 16, giWaveRaw
 
@@ -185,6 +231,9 @@ instr 1
   kstopchord_on chnget "Stopchord"
   ButtonEvent kstopchord_on, 18
   
+  kstop_lsys_on chnget "Stop_LSYS"
+  ButtonEvent kstop_lsys_on, 20
+
   kpeaks_on chnget "Peaks_on"
 
   ; OSC receive
@@ -240,9 +289,11 @@ instr 1
     kmess OSClisten gihandle, "active_peaks", "fffff", kpeak_id, kpeak_x, kpeak_y, kpeak_amp, kpeak_movement
     kOSC_received += kmess
     if kmess == 0 goto done_activepeaks
+      kpeaks_indx limit kpeaks_indx, 0, 31
       gkPeaks_x[kpeaks_indx] = kpeak_x
       kpeaks_indx += 1
-      ;Sactive sprintfk "active_peaks %i", kpeak_id
+      ;kactive4 active 4
+      ;Sactive sprintfk "active_peaks %i instr instances%i", kpeak_id, kactive4
       ;puts Sactive, kpeak_id+1
       kamp = (chnget:k("Amp")-15);+abs(kpeak_y)*10
       kcps = (((kpeak_x/1024)^2)*1600)+100
@@ -257,7 +308,8 @@ instr 1
         chnset kpan, Span
         ; start instr kun hvis den ikke allerede er i kPeaks_active
         if kPeaks_active[kpeak_id] == 0 then
-          event "i", kinstr, 0, -1
+          kcps_base = gkZerocross_distance[0]
+          event "i", kinstr, 0, -1, kcps_base
         endif
         kPeaks_active[kpeak_id] = 1 
       endif
@@ -422,6 +474,7 @@ instr 3
 endin
 
 instr 4
+  ; peaks sine cluster
   Samp sprintf "amp_%f", p1
   kamp chnget Samp
   Scps sprintf "cps_%f", p1
@@ -430,19 +483,23 @@ instr 4
   Span sprintf "pan_%f", p1
   kpan chnget Span
   kpan tonek kpan, 10
-  puts Samp, 1
-  printk2 kamp, frac(p1)*2
-  printk2 kcps, frac(p1)*2
+  
+  icps = (p4*300)+500
+  kcps1 = icps + (kcps*0.2)
+  ;puts Samp, 1
+  ;printk2 kamp, frac(p1)*2
+  ;printk2 kcps, frac(p1)*2
   apan butterlp interp(kpan), 8
-  amp linsegr 0, 0.15, 1, 0.5, 0
+  amp linsegr 0, 0.5, 1, 3, 0
   ;amp transegr 0, 0.2, 2, 1, 1, 0, 1, 0.5, 2, 0
-  a1 poscil ampdbfs(kamp)*amp, kcps, -1, -1
+  a1 poscil ampdbfs(kamp)*amp, kcps1, -1, -1
   aL = a1*sqrt(1-apan)
   aR = a1*sqrt(apan)
   outs aL, aR
 endin
 
 instr 5
+  ; noisechord
   ibasenote = 48
   iNotes[] fillarray 0,3,5,7,10
   knumpeaks chnget "numpeaks"
@@ -477,7 +534,7 @@ instr 5
 endin
 
 instr 10
-  ; read sine oscil waveshaped by rope wave
+  ; hsb oscil waveshaped by rope wave
   itab = p4
   print itab
   kfreq chnget "Freq_wav"
@@ -498,25 +555,30 @@ instr 10
   ibasfreq = i(kfreq)
   a1L hsboscil kamp, 0.5, kbrite, ibasfreq, giSine, ioctfn
   a1R hsboscil kamp, ktone, kbrite, ibasfreq, giSine, ioctfn
-  a2L tablei a1L*0.5, itab, 1, 0.5, 0 ;
+  icenter = 10/16
+  a2L tablei a1L*icenter, itab, 1, icenter, 0 ;
+  a2R tablei a1R*icenter, itab, 1, icenter, 0 ;
   a2L dcblock a2L ; prevent constant offset
-  a2L *= kamp
-  a2R tablei a1R*0.5, itab, 1, 0.5, 0 ;
   a2R dcblock a2R ; prevent constant offset
+  a2L *= kamp
   a2R *= kamp
-  outs a2L, a2R
+  outch 1, a2L, 2, a2R
 endin
 
 instr 11
-  ; read sine oscil waveshaped by rope wave
+  ; detuned sine oscil waveshaped by rope wave
   itab = p4
   print itab
-  kfreq chnget "Freq_wav"
+  kfreq chnget "Freq_wavd"
+  kx_dist = gkZerocross_distance[0]
+  kfreq *= kx_dist
   knumpeaks chnget "numpeaks"
-  kdetune chnget "detune_wav"
-  kfreq1 = kfreq+kfreq*(knumpeaks+1)*kdetune
-  kfreq2 = kfreq-kfreq*(knumpeaks+1)*kdetune
-  kamp_dB chnget "Amp_wav"
+  kavg_x_movement chnget "avg_x_movement"
+  kdetune chnget "detune_wavd"
+  kdetune *= kavg_x_movement
+  kfreq1 = kfreq+kfreq*(tonek(knumpeaks+1,2))*kdetune
+  kfreq2 = kfreq-kfreq*(tonek(knumpeaks+1,0.7))*kdetune
+  kamp_dB chnget "Amp_wavd"
   kamp = ampdbfs(kamp_dB)
   a10 poscil kamp, kfreq
   a11 poscil kamp, kfreq1
@@ -525,24 +587,31 @@ instr 11
   a1L = (a10+a11)*0.5
   a1R = (a10+a12)*0.5
   a1 *= 0.33
-  a2 tablei a1*0.5, itab, 1, 0.5, 0 ;
-  a2L tablei a1L*0.5, itab, 1, 0.5, 0 ;
-  a2R tablei a1R*0.5, itab, 1, 0.5, 0 ;
+  if itab = 1 then
+    icenter = 10/16
+  else
+    icenter = 0.5
+  endif
+  a2 tablei a1*icenter, itab, 1, icenter, 0 ;
+  a2L tablei a1L*icenter, itab, 1, icenter, 0 ;
+  a2R tablei a1R*icenter, itab, 1, icenter, 0 ;
   a2 dcblock a2 ; prevent constant offset
   a2L dcblock a2L ; prevent constant offset
   a2R dcblock a2R ; prevent constant offset
-  aleft = a2*0.25+a2L*0.75
-  aright = a2*0.25+a2R*0.75
-  outs aleft*1.5, aright*1.5
+  aleft = a2*0.1+a2L*0.9
+  aright = a2*0.1+a2R*0.9
+  aleft lpf18 aleft, 100+(tonek(knumpeaks+1,2)*600), 0.3, 0.9
+  aright lpf18 aright, 100+(tonek(knumpeaks+1,2)*600), 0.3, 0.9
+  outch 3, aleft*1.5, 4, aright*1.5
 endin
 
-opcode DistanceGrains, a, k[]kkkkii
-  kDistance[], kwavfreq, kgrainrate, kdetune, kgraindur, ivoice, imaxvoice xin
+opcode DistanceGrains, a, k[]kkkkkii
+  kDistance[], kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, ivoice, imaxvoice xin
   kamp = kDistance[ivoice] > 0 ? 1 : 0
   kamp tonek kamp, 1  
 
   ; grain rate
-  kgrainrate tonek kgrainrate*(1+kDistance[ivoice]*kdetune), 1
+  kgrainrate tonek kgrainrate*(1+kDistance[ivoice]*kdist_rate), 1
   async = 0
 
 ; grain rate FM
@@ -579,7 +648,7 @@ opcode DistanceGrains, a, k[]kkkkii
 	asamplepos	= 0				
 
 ; "master" grain pitch (transpose for all 4 source waveforms)
-	;kwavfreq	chnget "GrainPitch"					; transposition factor (playback speed) of audio inside grains, 
+	kwavfreq	= kwavfreq*semitone(ivoice*kvoice_spread)					; transposition factor (playback speed) of audio inside grains, 
 
 ; pitch sweep
 	ksweepshape		= 0.5						; grain wave pitch sweep shape (sweep speed), 0.5 is linear sweep
@@ -643,9 +712,8 @@ opcode DistanceGrains, a, k[]kkkkii
 			kwavekey1, kwavekey2, kwavekey3, kwavekey4, \		; individual transpose for each source
 			imax_grains						; system parameter (advanced)
 
-
   if (ivoice < imaxvoice-1) then
-    a1 += DistanceGrains(kDistance, kwavfreq, kgrainrate, kdetune, kgraindur, ivoice+1, imaxvoice)
+    a1 += DistanceGrains(kDistance, kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, ivoice+1, imaxvoice)
   endif
   iampscale = 1/imaxvoice
   xout(a1*iampscale)
@@ -657,32 +725,189 @@ instr 12
   kwavfreq chnget "Grainpitch"
   kamp_dB chnget "Grainamp"
   kgrainrate chnget "Grate"
+  kx_dist chnget "avg_x_distance"
+  kgrainrate *= limit(1-(kx_dist)*2, 0.1, 1)
   kgraindur chnget "Gdur"
-  kamp = ampdbfs(kamp_dB)  
+  kamp = ampdbfs(kamp_dB)*2
+  kactivity chnget "wave_activity"
+  kactivity limit kactivity, 0, 1
+  kamp_env EnvFollow kactivity, 0.01, 3
+  kamp *= kamp_env
   knumpeaks chnget "numpeaks"
   kwavfreq *= (knumpeaks+1)
-  kdetune chnget "detune"
-  kdetune = kdetune*5
-  imaxvoice = 4
-  a1 DistanceGrains gkXdistance, kwavfreq, kgrainrate, kdetune, kgraindur, 0, imaxvoice
-  a2 DistanceGrains gkZerocross_distance, kwavfreq, kgrainrate, kdetune, kgraindur, 0, imaxvoice
-  outs a1,a2
+  kdist_rate chnget "G_dist_rate"
+  kvoice_spread chnget "G_voice_spread"
+  imaxvoice = 5
+  a1 DistanceGrains gkXdistance, kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, 0, imaxvoice
+  a2 DistanceGrains gkZerocross_distance, kwavfreq, kgrainrate, kdist_rate, kvoice_spread, kgraindur, 0, imaxvoice
+  outch 9, a1*kamp, 10, a2*kamp
 endin
 
+opcode Graincloud, aa, kkkkkkkii
+  kwavfreq, kpitchmod, kpitch_spread, kgrainrate, kratemod, kdistribution, kgraindur, ivoice, imaxvoice xin
+  kamp = 1
 
-opcode OscBank, a, k[]i[]kkkii
+  ; grain rate
+  kgrainrate = kgrainrate*(1+(rspline(-0.5, 1, 0.5, 2)*kratemod))
+  async = 0
+
+; grain rate FM
+  kGrFmFratio = 1;    chnget "GrFmRatio"
+	kGrFmFreq	divz kgrainrate, kGrFmFratio, 1	        ; FM freq for modulating the grainrate 
+	kGrFmIndex = 0; chnget "GrFmIndx"      		        ; FM index for modulating the grainrate (normally kept in a 0.0 to 1.0 range)
+	iGrFmWave	= giSine				; FM waveform, for modulating the grainrate 
+	aGrFmSig	oscil kGrFmIndex, kGrFmFreq, iGrFmWave	; audio signal for frequency modulation of grain rate
+	agrainrate	= kgrainrate + (aGrFmSig*kgrainrate)	; add the modulator signal to the grain rate signal
+
+; distribution 
+	;kdistribution	= 0; chnget "Distribution"			; grain random distribution in time
+	idisttab	ftgentmp	0, 0, 16, 16, 1, 16, -10, 0	; probability distribution for random grain masking
+
+; grain shape
+	kduration	= divz(1,kgrainrate,1)*kgraindur*1000; 0.5; chnget "Graindur"		
+
+	ienv_attack	= giSigmoRise 			; grain attack shape (from table)
+	ienv_decay	= giSigmoFall 			; grain decay shape (from table)
+	ksustain_amount	= 0.0					  ; balance between enveloped time(attack+decay) and sustain level time, 0.0 = no time at sustain level
+	ka_d_ratio = 0.1;     chnget "Attack"					; balance between attack time and decay time, 0.0 = zero attack time and full decay time
+	kenv2amt = 0                    ; amount of secondary enveloping per grain (e.g. for fof synthesis)
+	ienv2tab	= giExpFall 				  ; secondary grain shape (from table), enveloping the whole grain if used
+
+; select source waveforms
+	kwaveform	= giSine		; source audio waveform 
+
+; original pitch for each waveform, use if they should be transposed individually
+; can also be used as a "cycles per second" parameter for single cycle waveforms (assuming that the kwavfreq parameter has a value of 1.0)
+	kwavekey1	= 1; chnget "Grainkey1"
+	kwavekey2	= 1;chnget "Grainkey2"
+	kwavekey3	= 1;chnget "Grainkey3"
+	kwavekey4	= 1;chnget "Grainkey4"
+	asamplepos	= 0				
+
+; "master" grain pitch (transpose for all 4 source waveforms)
+	kwavfreq	= kwavfreq*(1+(rspline(-0.5, 1, 0.5, 2)*kpitchmod))*(1+(ivoice*kpitch_spread))				; transposition factor (playback speed) of audio inside grains, 
+
+; pitch sweep
+	ksweepshape		= 0.5						; grain wave pitch sweep shape (sweep speed), 0.5 is linear sweep
+	iwavfreqstarttab 	ftgentmp	0, 0, 16, -2, 0, 0,   1		; start freq scalers, per grain
+	iwavfreqendtab		ftgentmp	0, 0, 16, -2, 0, 0,   1		; end freq scalers, per grain
+
+; FM of grain pitch (playback speed)
+	kPtchFmFreq	= 1; chnget "FmFreq"						; FM freq, modulating waveform pitch
+	kPtchFmIndex = 0; chnget "FmIndx"						; FM index, modulating waveform pitch
+	iPtchFmWave	= giSine						; FM waveform, modulating waveform pitch
+	ifmamptab	ftgentmp	0, 0, 16, -2, 0, 0,   1			; FM index scalers, per grain
+	ifmenv = -1 					                ; FM index envelope, over each grain (from table)
+	kPtchFmIndex = kPtchFmIndex + (kPtchFmIndex*kPtchFmFreq*0.00001) 	; FM index scaling formula
+	awavfm oscil	kPtchFmIndex, kPtchFmFreq, iPtchFmWave		; Modulator signal for frequency modulation inside grain
+
+; trainlet parameters
+	icosine	= giCosine				; needs to be a cosine wave to create trainlets
+  kTrainCpsMult = 1;   chnget "TrCpsMult"                     ; multiplier for  trainlet cps relative to grain rate
+	kTrainCps	= kTrainCpsMult*kgrainrate		
+	knumpartials= 1;	chnget "TrainPart"					; number of partials in trainlet
+	kchroma = 1; chnget "TrainChroma"					; chroma, falloff of partial amplitude towards sr/2
+
+	; gain masking table, amplitude for individual grains
+	igainmasks	ftgentmp	0, 0, 16, -2, 0, 0, 1
+
+	; channel masking table, output routing for individual grains (zero based, a value of 0.0 routes to output 1)
+	ichanmasks	ftgentmp	0, 0, 16, -2,  0, 1,  0, 1
+	
+	; random masking (muting) of individual grains
+	krandommask	=0;chnget "RandMask"
+
+	; wave mix masking. 
+  iwaveamptab	ftgentmp 0, 0, 32, -2,   0, 0,  1,0,0,0,0
+	ktrainbal = 0; chnget "TrainBal"
+	ktrainvol = sqrt(ktrainbal)
+	ksinevol = sqrt(1-ktrainbal)*0.25
+  tablew ktrainvol, 6, iwaveamptab
+  tablew ksinevol, 5, iwaveamptab
+  tablew ksinevol, 4, iwaveamptab
+  tablew ksinevol, 3, iwaveamptab
+  tablew ksinevol, 2, iwaveamptab
+; system parameter
+	imax_grains	= 100				; max number of grains per k-period
+        
+	a1,a2	partikkel \					; 					
+			agrainrate, \						; grains per second			
+			kdistribution, idisttab, async, \			; synchronous/asynchronous		
+			kenv2amt, ienv2tab, ienv_attack, ienv_decay, \		; grain envelope (advanced)		
+			ksustain_amount, ka_d_ratio, kduration, \		; grain envelope 			
+			kamp, \							; amp					
+			igainmasks, \						; gain masks (advanced)			
+			kwavfreq, \						; grain pitch (playback frequency)	
+			ksweepshape, iwavfreqstarttab, iwavfreqendtab, \	; grain pith sweeps (advanced)		
+			awavfm, ifmamptab, ifmenv, \				; grain pitch FM (advanced)		
+			icosine, kTrainCps, knumpartials, kchroma, \		; trainlets				
+			ichanmasks, \ 					        ; channel mask (advanced)
+			krandommask, \						; random masking of single grains	
+			kwaveform, kwaveform, kwaveform, kwaveform, \	; set source waveforms, all set to the live input buffer here
+			iwaveamptab, \						; mix source waveforms (remember, we can use different samplepos and transposition for each)
+			asamplepos, asamplepos, asamplepos, asamplepos, \	; read position for source waves	
+			kwavekey1, kwavekey2, kwavekey3, kwavekey4, \		; individual transpose for each source
+			imax_grains						; system parameter (advanced)
+
+  if (ivoice < imaxvoice-1) then
+    a1a, a2a Graincloud kwavfreq, kpitchmod, kpitch_spread, kgrainrate, kratemod, kdistribution, kgraindur, ivoice+1, imaxvoice
+    a1 += a1a
+    a2 += a2a
+  endif
+  iampscale = 1/(imaxvoice^0.5)
+  xout(a1*iampscale, a2*iampscale)
+endop
+
+instr 13
+  ; async grain cloud
+  kFaders[] tab2array giWaveRaw1
+  kminfaders minarray kFaders
+  kmaxfaders maxarray kFaders
+  kavg_x_movement chnget "avg_x_movement"
+  kactivity chnget "wave_activity"
+  kactivity limit kactivity, 0, 1
+  amp_activity follow2 a(kactivity), 0.1, 4
+  kwavfreq chnget "Grainpitch2"
+  kamp_dB chnget "Grainamp2"
+  kgrainrate chnget "Grate2"
+  kgraindur chnget "Gdur2"
+  kamp = ampdbfs(kamp_dB)  
+  imaxvoice = 8
+  kpitchmod chnget "G2_pitchmod"
+  kpitch_spread chnget "G2_pitch_spread"
+  kratemod chnget "G2_ratemod"
+  knumpeaks chnget "numpeaks"
+  ; mod mapping
+  kamp *= amp_activity
+  kdistribution = knumpeaks/10
+  kgrainrate *= (1+(kavg_x_movement*2))
+  kpitch_spread *= kmaxfaders
+  kgraindur *= (kminfaders+1)
+  a1,a2 Graincloud kwavfreq, kpitchmod, kpitch_spread, kgrainrate, kratemod, kdistribution, kgraindur, 0, imaxvoice
+  outch 11, a1*kamp, 12, a2*kamp
+endin
+
+opcode OscBank, aa, k[]i[]kkkii
   kAmps[], iPitches[], kbasefreq, kchroma, kdetune, ivoice, imaxvoice xin
-  kamp = kAmps[ivoice] * 1+(ivoice*kchroma)
+  if kchroma > 0 then
+    kamp = kAmps[ivoice] * (1+((ivoice+1)*kchroma))
+  else
+    kamp = kAmps[ivoice] + abs(kchroma)
+  endif
   ;printk2 kamp, ivoice*2
   kamp tonek kamp, 1  
   kcps = kbasefreq*semitone(iPitches[ivoice])
-  kcps = kcps+(kcps*random(-kdetune, kdetune))
+  kcps = kcps+(kcps*rspline(-kdetune, kdetune, 0.3, 0.9))
   a1 poscil kamp, kcps
+  ipan = ivoice/(imaxvoice-1)
+  aL = a1*sqrt(1-ipan)
+  aR = a1*sqrt(ipan)
   if (ivoice < imaxvoice-1) then
-    a1 += OscBank(kAmps, iPitches, kbasefreq, kchroma, kdetune, ivoice+1, imaxvoice)
+    aLa,aRa OscBank kAmps, iPitches, kbasefreq, kchroma, kdetune, ivoice+1, imaxvoice
+    aL += aLa
+    aR += aRa
   endif
-  iampscale = 1;/imaxvoice
-  xout(a1*iampscale)
+  xout(aL, aR)
 endop
 
 instr 16
@@ -694,92 +919,210 @@ instr 16
   kamp = ampdbfs(kamp_dB)
   kchroma chnget "chroma_fft"
   kdetune chnget "detune_fft"
+  kdist chnget "dist_fft"
   imaxvoice = 8
-  a1 OscBank gkFftbins, iPitches, kfreq, kchroma, kdetune, 1, imaxvoice; start at 1, skipping the DC fft bin
+  aL,aR OscBank gkFftbins, iPitches, kfreq, kchroma, kdetune, 1, imaxvoice; start at 1, skipping the DC fft bin
   ;a1 = (tanh(a1)/imaxvoice)*kamp
-  a1 = a1/imaxvoice
-  a2 tablei a1*0.5, itab, 1, 0.5, 0 ;
-  a2 dcblock a2 ; prevent constant offset
-  a2 butterlp, a2, 2500
-  a2 *= kamp
-  outs a2,a2
+  aL = aL/imaxvoice
+  aR = aR/imaxvoice
+  krandfq_flo rspline 0.3,0.6, 0.2, 0.7
+  klfo oscil 0.5, krandfq_flo
+  klfo += 0.5
+  a3L lpf18 aL, 1000+(klfo*400), 0.2, kdist*4
+  a3R lpf18 aR, 1000-(klfo*400), 0.2, kdist*4
+  outch 5, a3L*kamp, 6, a3R*kamp
 endin
+
 
 instr 17
   ; oscillator bank, tuned to (penta)scale, mix rope fader values
   itab = p4
   iPitches[] fillarray 0, 0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24
   kFaders[] tab2array giWaveRaw1
+  kFaders = kFaders-(sumarray(kFaders)/lenarray(kFaders)) ; center
+  kFaders limit kFaders, 0.001, 1
+  kFaders -= 0.001
+  kFaders = (kFaders^2)*10
+  krise = 0.01
+  kfall = 3
+  kFaders[0] EnvFollow kFaders[0], krise, kfall  
+  kFaders[1] EnvFollow kFaders[1], krise, kfall  
+  kFaders[2] EnvFollow kFaders[2], krise, kfall  
+  kFaders[3] EnvFollow kFaders[3], krise, kfall  
+  kFaders[4] EnvFollow kFaders[4], krise, kfall  
+  kFaders[5] EnvFollow kFaders[5], krise, kfall  
+  kFaders[6] EnvFollow kFaders[6], krise, kfall  
+  kFaders[7] EnvFollow kFaders[7], krise, kfall  
+  kFaders[8] EnvFollow kFaders[8], krise, kfall  
+  kFaders[9] EnvFollow kFaders[9], krise, kfall  
+  ;kFaders += 10 ; now it is unipolar
+  ;kmin1 minarray kFaders
+  ;kmax1 maxarray kFaders
+  ;kFaders = (kFaders-kmin1);*divz(1,(kmax1-kmin1),1)
+  ;kFaders = (kFaders^2);*kmax1
+  
   kmin minarray kFaders
   kmax maxarray kFaders
-  kFaders = (kFaders-kmin)*divz(1,(kmax-kmin),1)
+  ;kprint metro 1
+  ;if kprint > 0 then
+  ;  ;printarray(kFaders)
+  ;  printk2 kmin, 5
+  ;  printk2 kmax, 10
+  ;endif
+  ;kmin1 = minarray(kFaders)
+  ;kmax1 = maxarray(kFaders)
   kfreq chnget "Freq_fadr"
   kamp_dB chnget "Amp_fadr"
   kamp = ampdbfs(kamp_dB)
   kdetune chnget "detune_fadr"
   kchroma chnget "chroma_fadr"
+  kdist chnget "dist_fadr"
   imaxvoice = 10
-  a1 OscBank kFaders, iPitches, kfreq, kchroma, kdetune, 0, imaxvoice
-  ;a1 = (tanh(a1)/imaxvoice)*kamp
-  a1 = a1/imaxvoice
-  a2 tablei a1*0.5, itab, 1, 0.5, 0 ;
-  a2 dcblock a2 ; prevent constant offset
-  a2 butterlp, a2, 2500
-  a2 *= kamp
-  outs a2,a2
+  aL,aR OscBank kFaders, iPitches, kfreq, kchroma, kdetune, 0, imaxvoice
+  aL = aL/imaxvoice
+  aR = aR/imaxvoice
+  krandfq_flo rspline 0.3,0.6, 0.2, 0.7
+  klfo oscil 0.5, krandfq_flo
+  klfo += 0.5
+  a3L lpf18 aL, 1000+(klfo*400), 0.2, kdist*4
+  a3R lpf18 aR, 1000-(klfo*400), 0.2, kdist*4
+  outch 7, a3L*kamp, 8, a3R*kamp
 endin
 
+
 instr 18
+  ; stopchord control
   kwave_activity chnget "wave_activity"
   kwave_activity tonek kwave_activity, 1
+  kmax_activity init 0
+  kmax_activity max kmax_activity, kwave_activity
   kwa_diff diff kwave_activity
 
-  ksig = (kwa_diff < 0) && (kwave_activity < 0.1) ? 1 : 0
+  ksig = (kwa_diff < 0) && (kwave_activity < 0.1) && (kmax_activity> 0.3) ? 1 : 0
   ktrig trigger ksig, 0.5, 0
-  ;printk2 kwave_activity
+  
   kmax_x maxarray gkXpos
+  kmin_x MinArrayThresh gkXpos, 0
   kmax_z maxarray gkZerocross
-  kpeak_x maxarray gkPeaks_x
+  kmin_z MinArrayThresh gkZerocross, 0
+  kmaxpeak_x maxarray gkPeaks_x
+  kminpeak_x MinArrayThresh gkPeaks_x, 04
+  knumpeaks chnget "numpeaks"
+  kavg_xpos divz sumarray(gkXpos), knumpeaks, 0.2
 
-  kcps1 delayk kmax_x, 0.5
-  kcps2 delayk kmax_z, 0.5
-  kcps3 delayk kpeak_x, 0.5
+  ; selec1 min or max
+  kminmax chnget "stopchord_minmax"
+  if kminmax > 0 then
+    kcps1 delayk kmax_x*0.8, 1
+    kcps2 delayk kmax_z*0.8, 1
+    kcps3 delayk kmaxpeak_x*0.8, 1
+  else
+    kcps1 delayk kmin_x, 1
+    kcps2 delayk kmin_z, 1
+    kcps3 delayk kminpeak_x, 1
+  endif
+  ; select scale or free
+  kscalefree chnget "stopchord_scalefree"
   if ktrig > 0 then
-    event "i", 19, 0, 0.5, kcps1, kcps2, kcps3
+    event "i", 19, 0.2+kavg_xpos, 0.2+kmax_activity, kcps1, kcps2, kcps3, kscalefree
+    kmax_activity = 0
   endif 
 
 endin
 
 instr 19
-  icps1 = p4*400
-  icps2 = p5*900
-  icps3 = p6*1500
-  print icps1, icps2, icps3
-  iamp = ampdbfs(-30)
-  ; more random envelope both attack and release
-  aenv1 linenr iamp, random(0.1,0.4), random(2,3.5), 0.01
-  aenv2 linenr iamp, random(0.08,0.16), random(1.8,2.8), 0.01
-  aenv3 linenr iamp, random(0.01,0.14), random(1.4,2.3), 0.01
-  amodenv linenr 1, random(0.01,0.4), random(1,3), 0.01
-  kdetune chnget "detune"
+  ; stopchord tone gen
+  iscalefree = p7
+  iScale[] fillarray 0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27, 29, 31, 34, 36
+  ilenscale lenarray iScale
+  if iscalefree > 0 then
+    ibasefreq = 220
+    icps1 = ibasefreq*semitone(iScale[int(limit(p4*ilenscale-1, 0, ilenscale-1))])
+    icps2 = ibasefreq*semitone(iScale[int(limit(p5*ilenscale-1, 0, ilenscale-1))])
+    icps3 = ibasefreq*semitone(iScale[int(limit(p6*ilenscale-1, 0, ilenscale-1))])
+  else
+    icps1 = limit(p4* 400,100, 2000)
+    icps2 = limit(p5*1100,100, 2000)
+    icps3 = limit(p6*1800,100, 2000)
+  endif
+  ;print icps1, icps2, icps3
+  iamp = ampdbfs(chnget("amp_stopchord"))
+  ; random envelope both attack and release
+  aenv1   linsegr 0, random(0.05,0.4),   1, 0.1, 0.2, random(0.3,0.5), 0.6, random(2,3.5), 0.01
+  aenv2   linsegr 0, random(0.01,0.16), 1, 0.1, 0.2, random(0.3,0.5), 0.6, random(1.8,2.8), 0.01
+  aenv3   linsegr 0, random(0.001,0.1), 1, 0.1, 0.2, random(0.3,0.5), 0.6, random(1.4,4.3), 0.01
+  amodenv linsegr 1, random(0.01,0.05), 0.1, 1, 0.01, 0.3, 0.01
+  kdetune chnget "detune_stopchord"
+  kdetune *= 0.1
   kcps1a rspline icps1-(icps1*kdetune), icps1+(icps1*kdetune), 0.25, 0.8
   kcps2a rspline icps2-(icps2*kdetune), icps2+(icps2*kdetune), 0.25, 0.8
   kcps3a rspline icps3-(icps3*kdetune), icps3+(icps3*kdetune), 0.25, 0.8
   kcps1b rspline icps1-(icps1*kdetune), icps1+(icps1*kdetune), 0.25, 0.8
   kcps2b rspline icps2-(icps2*kdetune), icps2+(icps2*kdetune), 0.25, 0.8
   kcps3b rspline icps3-(icps3*kdetune), icps3+(icps3*kdetune), 0.25, 0.8
-  a1a poscil aenv1, kcps1a
+  a1a poscil aenv1*0.5, kcps1a
   a2a poscil aenv2, kcps2a
   a3a poscil aenv3, kcps3a
-  a1b poscil aenv1, kcps1b
+  a1b poscil aenv1*0.5, kcps1b
   a2b poscil aenv2, kcps2b
   a3b poscil aenv3, kcps3b
-  amod1 = a1a*a2a*amodenv*3
-  amod2 = a2b*a3a*amodenv*3
+  amod1 = a1a*a2a*amodenv*6
+  amod2 = a2b*a3a*amodenv*6
   aleft = a1a+a2a+a3a+amod1
   aright = a1b+a2b+a3b+amod2
-   outs aleft, aright
+  outch 13, aleft*iamp, 14, aright*iamp
 endin
+
+instr 20
+  ; stopchord LYS
+  kwave_activity chnget "wave_activity"
+  kwave_activity tonek kwave_activity, 1
+  kmax_activity init 0
+  kmax_activity max kmax_activity, kwave_activity
+
+  kwa_diff diff kwave_activity
+
+  ksig = (kwa_diff < 0) && (kwave_activity < 0.1)  && (kmax_activity> 0.3) ? 1 : 0
+  ktrig trigger ksig, 0.5, 0
+  knumpeaks chnget "numpeaks"
+  knumpeaks delayk knumpeaks, 1
+  ksymbol = knumpeaks%4
+  chnset int(ksymbol), "root"
+
+  kFaders[] tab2array giWaveRaw1
+  kminfaders minarray kFaders
+  kmaxfaders maxarray kFaders
+  kmax_x maxarray gkXpos
+  kmin_x minarray gkXpos
+  kmax_z maxarray gkZerocross
+  kmin_z minarray gkZerocross
+  kmaxpeak_x maxarray gkPeaks_x
+  kminpeak_x minarray gkPeaks_x
+  kz0 = gkZerocross[0]
+  kz0 delayk kz0, 1
+  kmax_x delayk kmax_x, 0.5
+  kmin_x delayk kmin_x, 0.5
+  kmax_z delayk kmax_z, 0.5
+  kmin_z delayk kmin_z, 0.5
+  kmaxpeak_x delayk kmaxpeak_x, 0.5
+  kminpeak_x delayk kminpeak_x, 0.5
+  kmaxfaders delayk kmaxfaders, 1
+  ktempo1 = 90
+  ktempo2 = 40
+  if ktrig > 0 then
+    if kmax_x > 0.6 then
+      chnset ktempo1, "tempo"
+    else
+      chnset ktempo2, "tempo"
+    endif
+    event "i", 102, 0, 1+(kmaxfaders*2), 48+int(kz0*24), 90
+    kmax_activity = 0
+  endif 
+
+endin
+
+
+
 /*
 opcode DistanceOscil, a, k[]kkii
   kDistance[], kbasefreq, kdetune, ivoice, imaxvoice xin

@@ -445,7 +445,7 @@ try:
             osc_msg = float(wave_activity)
             osc_io.sendOSC('activity', osc_msg) # send OSC back to client
             
-            #faders, num_faders
+            
 
             # Display result
             output = cv2.add(current_frame, wave_img)    

@@ -21,7 +21,7 @@ cam.start_acquisition()
 
 cam.get_image(img)
 current_frame = img.get_image_data_numpy()
-current_frame = cv2.flip(current_frame,-1)
+#current_frame = cv2.flip(current_frame,-1)
 
 #cap = cv2.VideoCapture("rope_ximea_1.mp4")
 #ret, current_frame = cap.read()
@@ -46,6 +46,7 @@ mask_left = pts[0][0][0] # left top, assumes vertical left edge
 mask_right = pts[1][0][0] # right top, as above
 print('mask LR', mask_left, mask_right)
 send_counter = 0
+max_numpeaks = 0
 
 empty_id = 9999
 max_n_peaks = 99
@@ -317,7 +318,7 @@ try:
             frame_diff_masked = cv2.bitwise_and(frame_diff, frame_diff, mask=mask)
             frame_diff_masked = cv2.blur(frame_diff_masked, (5,5))
             # threshold the image to make hard black/white
-            _, binary_img = cv2.threshold(frame_diff_masked, 5, 255, cv2.THRESH_BINARY)
+            _, binary_img = cv2.threshold(frame_diff_masked, 15, 255, cv2.THRESH_BINARY)
             # output img for display of curves
             wave_img = np.zeros((dimensions[0], dimensions[1],3), np.uint8)
             # find centroid, disambiguation of rope trace
@@ -340,7 +341,7 @@ try:
             #print('sin', 1+(frame_num/100))
             noise_gate_diff = 4000#np.sum(np.abs(wave_1D-prev_wave_1D))
             # amount of activity
-            wave_1D_diff = np.sum(np.abs(wave_1D-prev_wave_1D))/dimensions[1]
+            wave_activity = np.sum(binary_img)/(dimensions[0]*dimensions[1]*5)#np.sum(np.abs(wave_1D-prev_wave_1D))/dimensions[1]
             prev_wave_1D = wave_1D
 
             if noise_gate_diff < 3000: noise_gate = 0
@@ -369,6 +370,9 @@ try:
             # peak parms and stats
             active_ids_a = np.array(active_ids)
             numpeaks = len(active_ids)
+            if numpeaks > max_numpeaks:
+                max_numpeaks = numpeaks
+                print('new max numpeaks', max_numpeaks)
             #print('numpeaks', numpeaks)
             if numpeaks > 0 :
                 active_ids_sorted = active_ids_a[np.argsort(active_ids_a[:,1])] # sort by ascending x
@@ -435,9 +439,11 @@ try:
                 val = (mask_center[i]-faders[i])/(max_amp*0.5)
                 osc_msg = i, val, len(faders)
                 osc_io.sendOSC('faders', osc_msg) # send OSC back to client
-            osc_msg = wave_1D_diff
+            osc_msg = float(wave_activity)
             osc_io.sendOSC('activity', osc_msg) # send OSC back to client
             
+            
+
             # Display result
             output = cv2.add(current_frame, wave_img)    
             if show_mask:
@@ -504,12 +510,14 @@ try:
                     zc_disp = zc_disp + f'{i:.2f}' + ', '
                 cv2.putText(output, zc_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
                 legend_y += v_offset*2
+                cv2.putText(output, f'wave activity {wave_activity:.2f}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+                
             output = cv2.resize(output, size)
             cv2.imshow("Rope", output)
         previous_frame = current_frame.copy()
         cam.get_image(img)
         current_frame = img.get_image_data_numpy()
-        current_frame = cv2.flip(current_frame,-1)
+        #current_frame = cv2.flip(current_frame,-1)
         #ret, current_frame = cap.read()
         #if not ret:
         #    break
