@@ -21,21 +21,56 @@ timethen = time.time()
 #
 #cam.get_image(img)
 #current_frame = img.get_image_data_numpy()
-#current_frame = cv2.flip(current_frame,-1)
 
-cap = cv2.VideoCapture("ximea_rec_gulen3_activity.avi")
-skipframes = 300
+cap = cv2.VideoCapture("rope_2.mp4")#ximea_rec_gulen3_activity.avi")
+skipframes = 1
 for i in range(skipframes):
     ret, current_frame = cap.read()
 current_frame = cv2.flip(current_frame,-1)
 previous_frame = current_frame
-dimensions = current_frame.shape
-print(dimensions)
-mask = np.zeros(dimensions[:2], dtype="uint8")
-pts = np.array([[int(dimensions[1]*0.05),int(dimensions[0]*0.2)],
-                [int(dimensions[1]*0.96),int(dimensions[0]*0.3)],
-                [int(dimensions[1]*0.96),int(dimensions[0]*0.8)],
-                [int(dimensions[1]*0.05),int(dimensions[0]*0.8)]], np.int32)
+input_size = current_frame.shape
+print(input_size)
+
+# todo:
+# after binary_img thresh: replace input_size with processing_size (approx 200)
+# out_data size = processing size, and for faders = num_faders (10)
+# output_size change to display_size
+# check if frame rate can be set significantly higher with lower processing size
+# make peak follow parms relative to size (max peak change etc)
+# make median and lowpass filter parms relative to processing size, also filter_padding
+# fix clamp to center outside mask range right (and skip display there)
+
+
+# config parms
+binary_thresh = 25
+blur_size = 5
+fps = 18
+flip = False
+mask_up_left  = (0.05, 0.5)
+mask_up_right = (0.95, 0.4)
+mask_lo_right = (0.95, 0.99)
+mask_lo_left  = (0.05, 0.75)
+
+# processing size
+process_size_ = 200
+process_scale = process_size_/input_size[1] # data array shape is y,x
+process_size = (process_size_,int(input_size[0]*process_scale))
+
+# output size
+display_size_ = 1000
+display_scale = display_size_/input_size[1] # data array shape is y,x
+display_size = (display_size_,int(input_size[0]*display_scale))
+
+# flip
+if flip:
+    current_frame = cv2.flip(current_frame,-1)
+
+# mask etc
+mask = np.zeros(input_size[:2], dtype="uint8")
+pts = np.array([[int(input_size[1]*mask_up_left[0]),int(input_size[0]*mask_up_left[1])],
+                [int(input_size[1]*mask_up_right[0]),int(input_size[0]*mask_up_right[1])],
+                [int(input_size[1]*mask_lo_right[0]),int(input_size[0]*mask_lo_right[1])],
+                [int(input_size[1]*mask_lo_left[0]),int(input_size[0]*mask_lo_left[1])]], np.int32)
 max_amp = np.max(pts[:,1])-np.min(pts[:,1])
 pts = pts.reshape((-1,1,2))
 polyg = cv2.fillPoly(mask,pts=[pts],color=255)
@@ -44,7 +79,7 @@ print(pts[0][0][1],pts[3][0][1])
 wavecenter_y_left = np.max([pts[0][0][1],pts[3][0][1]]) - int(abs(pts[0][0][1]-pts[3][0][1])*0.5)
 wavecenter_y_right = np.max([pts[1][0][1],pts[2][0][1]]) - int(abs(pts[1][0][1]-pts[2][0][1])*0.5)
 print('wavecenter', wavecenter_y_left, wavecenter_y_right)
-mask_center = np.linspace(wavecenter_y_left, wavecenter_y_right, dimensions[1])
+mask_center = np.linspace(wavecenter_y_left, wavecenter_y_right, input_size[1])
 mask_left = pts[0][0][0] # left top, assumes vertical left edge
 mask_right = pts[1][0][0] # right top, as above
 print('mask LR', mask_left, mask_right)
@@ -58,9 +93,9 @@ peak_ids += empty_id
 peak_prev_ids = np.zeros(max_n_peaks)
 peak_prev_ids += empty_id
 current_peak_id = 0
-peak_max_change = dimensions[1]*0.3
-prev_wave_1D = np.zeros(dimensions[1])
-fps = 20
+peak_max_change = input_size[1]*0.3
+prev_wave_1D = np.zeros(input_size[1])
+
 
 # BGR colors
 red = (0,0,255)
@@ -88,6 +123,7 @@ stats_color = yellow
 fader_color = purple
 fft_color = orange
 
+show_binary = True
 show_centroid = False
 show_fill_blanks = False
 show_medianfilter = False
@@ -168,8 +204,8 @@ def find_center_wave_regr(wave_1D, mask_left, mask_right):
 
 def centroid_1D_from_img(input_img, output_img, show_centroid, centroid_color):
     # centroid
-    centroid_1D = np.zeros(dimensions[1])
-    for i in range(dimensions[1]):
+    centroid_1D = np.zeros(input_size[1])
+    for i in range(input_size[1]):
         y_coords = np.nonzero(input_img[:,i])
         if len(y_coords[0]) > 0:
             y_centroid = np.mean(y_coords)
@@ -186,8 +222,14 @@ def fill_in_missing_points(y_init, input_1D, output_1D, output_img, show_fill_bl
     savepoint = 0
     firstpoint = [] # for filling filter padding to the left
     create_line = 0
-    for i in range(dimensions[1]):
+    first_point = 0
+    for i in range(input_size[1]):
         y_value = input_1D[i]
+        if first_point == 0:
+            if input_1D[i] == 0:
+                y_value = y_init
+            else:
+                first_point = 1
         if y_value == 0:
             if savepoint == 0:
                 x_prev = i
@@ -207,32 +249,35 @@ def fill_in_missing_points(y_init, input_1D, output_1D, output_img, show_fill_bl
             y_prev = y_value
             savepoint = 0
     # fill any blank spaces at the end of the array
-    for i in range(x_prev,dimensions[1]+filter_padding):
-        output_1D[i] = y_prev
+    #for i in range(x_prev,input_size[1]+filter_padding):
+    #    output_1D[i] = y_prev
+    line_len = input_size[1]-x_prev
+    line = np.linspace(y_prev, y_init, line_len)
+    output_1D[x_prev:input_size[1]] = np.reshape(line, shape=(line_len,))
     if show_fill_blanks:
-        for i in range(mask_left,dimensions[1]):
+        for i in range(mask_left,input_size[1]):
             cv2.circle(output_img, (i,int(output_1D[i])), 3, fill_blanks_color, 1)
     return output_1D
 
 def median_1D(input_1D, filter_padding, filter_size1, filter_size2, output_img, show_medianfilter, medianfilter_color):
     # median filtering
-    for i in range(dimensions[1]+filter_padding-filter_size1):
+    for i in range(input_size[1]+filter_padding-filter_size1):
         input_1D[i+int(filter_size1/2)] = np.median(input_1D[i:i+filter_size1])
-    for i in range(dimensions[1]+filter_padding-filter_size2):
+    for i in range(input_size[1]+filter_padding-filter_size2):
         input_1D[i+int(filter_size2/2)]= np.median(input_1D[i:i+filter_size2])    
     if show_medianfilter:
-        for i in range(mask_left,dimensions[1]):
+        for i in range(mask_left,input_size[1]):
             cv2.circle(output_img, (i,int(wave_1D[i])), 3, medianfilter_color, 1)
     return input_1D
 
 def lowpass_1D(input_1D, output_img, filter_padding, filter_size1, filter_size2, show_lowpassfilter, lowpass_color):
     # lowpass
-    for i in range(dimensions[1]+(filter_padding*2)-filter_size1):
+    for i in range(input_size[1]+(filter_padding*2)-filter_size1):
         input_1D[i+int(filter_size1/2)] = np.mean(input_1D[i:i+filter_size1])
-    for i in range(dimensions[1]+(filter_padding*2)-filter_size2):
+    for i in range(input_size[1]+(filter_padding*2)-filter_size2):
         input_1D[i+int(filter_size2/2)] = np.mean(input_1D[i:i+filter_size2])
     if show_lowpassfilter:
-        for i in range(mask_left,dimensions[1]):
+        for i in range(mask_left,input_size[1]):
             cv2.circle(output_img, (i,int(input_1D[i])), 4, lowpass_color, 1)
     return input_1D
 
@@ -240,8 +285,12 @@ def find_peaks(input_1D, center_wave, left_limit, right_limit, show_wavesign, wa
     # check center value of wave_1D, let this be zero
     # for segment where wave_1d > 0, find index of max value
     # for segment where wave_1D < 0 find index of min value
-    #wave_center = np.linspace(wavecenter_y_left, wavecenter_y_right, dimensions[1]) 
-    sign = np.sign(input_1D-center_wave)
+    #wave_center = np.linspace(wavecenter_y_left, wavecenter_y_right, input_size[1]) 
+    threshold = max_amp*0.02
+    #print('thresh', threshold, max_amp, threshold/max_amp, max_amp/threshold)
+    arr = input_1D-center_wave
+    arr[np.abs(arr) < threshold] = 0
+    sign = np.sign(arr)
     for i in range(left_limit,right_limit):
         if show_wavesign:
             y = int((sign[i]*150)+center_wave[i])
@@ -252,7 +301,7 @@ def find_peaks(input_1D, center_wave, left_limit, right_limit, show_wavesign, wa
     signum_old = 0
     for i in range(left_limit,right_limit):
         signum = sign[i]
-        if signum != signum_old:
+        if (signum != signum_old) and (signum != 0):
             sign_indices.append(i)
         signum_old = signum
     peak_indices = []
@@ -311,218 +360,219 @@ try:
         #current_frame_gray = cv2.blur(current_frame_gray, (5,5))   
         # diff and mask
         frame_diff = cv2.subtract(current_frame_gray,previous_frame_gray)
-        diff_thresh = 20000
-        if np.sum(frame_diff) < diff_thresh:
-            pass
-            #print(f'skipping at frame {frame_num}')
+        frame_diff = np.clip(frame_diff,0,255)
+        frame_diff_masked = cv2.bitwise_and(frame_diff, frame_diff, mask=mask)
+        frame_diff_masked = cv2.blur(frame_diff_masked, (blur_size,blur_size))
+        # threshold the image to make hard black/white
+        _, binary_img = cv2.threshold(frame_diff_masked, binary_thresh, 255, cv2.THRESH_BINARY)
+        max_image = np.shape(binary_img)[0]*np.shape(binary_img)[1]*255
+        activation_sum = np.sum(binary_img)/max_image
+        diff_thresh = 0.000001 # can use this to hold last shape (set thresh higher than approx 0.01)
+        if activation_sum < diff_thresh:
+            binary_img *= 0        
+        #print('processing')
+        # output img for display of curves
+        wave_img = np.zeros((input_size[0], input_size[1],3), np.uint8)
+        # find centroid, disambiguation of rope trace
+        centroid_1D = centroid_1D_from_img(binary_img, wave_img, show_centroid, centroid_color)
+        # fill in any blanks in the wave
+        filter_padding = 50
+        wave_1D = np.zeros(input_size[1]+filter_padding*2)
+        wave_1D = fill_in_missing_points(wavecenter_y_left, centroid_1D, wave_1D, wave_img, show_fill_blanks, fill_blanks_color)
+        # median filtering
+        filter_size1 = 29
+        filter_size2 = 41
+        wave_1D = median_1D(wave_1D, filter_padding, filter_size1, filter_size2, wave_img, show_medianfilter, medianfilter_color)
+        # lowpass
+        filter_size1 = 40
+        filter_size2 = 50
+        wave_1D = lowpass_1D(wave_1D, wave_img, filter_padding, filter_size1, filter_size2, show_lowpassfilter, lowpass_color)
+        # crop filter padding
+        wave_1D = wave_1D[filter_padding:-filter_padding]
+        #wave_1D = (np.sin(np.linspace(0, np.pi*(1+(frame_num/100)), input_size[1]))*100)+300
+        #print('sin', 1+(frame_num/100))
+        noise_gate_diff = 4000#np.sum(np.abs(wave_1D-prev_wave_1D))
+        # amount of activity
+        wave_activity = np.sum(binary_img)/(input_size[0]*input_size[1]*5)#np.sum(np.abs(wave_1D-prev_wave_1D))/input_size[1]
+        prev_wave_1D = wave_1D
+        if noise_gate_diff < 3000: noise_gate = 0
+        else: noise_gate = 1
+        #print('noise_gate', noise_gate)
+        # find center              
+        center_wave = find_center_wave_regr(wave_1D, mask_left, mask_right)
+        # find peaks and peak ids
+        if noise_gate > 0:
+            peak_indices = find_peaks(wave_1D, center_wave, mask_left, input_size[1], show_wavesign, wavesign_color, show_wavecenter, wavecenter_color)
         else:
-            #print('processing')
-            frame_diff = np.clip(frame_diff,0,255)
-            frame_diff_masked = cv2.bitwise_and(frame_diff, frame_diff, mask=mask)
-            frame_diff_masked = cv2.blur(frame_diff_masked, (5,5))
-            # threshold the image to make hard black/white
-            _, binary_img = cv2.threshold(frame_diff_masked, 15, 255, cv2.THRESH_BINARY)
-            # output img for display of curves
-            wave_img = np.zeros((dimensions[0], dimensions[1],3), np.uint8)
-            # find centroid, disambiguation of rope trace
-            centroid_1D = centroid_1D_from_img(binary_img, wave_img, show_centroid, centroid_color)
-            # fill in any blanks in the wave
-            filter_padding = 50
-            wave_1D = np.zeros(dimensions[1]+filter_padding*2)
-            wave_1D = fill_in_missing_points(wavecenter_y_left, centroid_1D, wave_1D, wave_img, show_fill_blanks, fill_blanks_color)
-            # median filtering
-            filter_size1 = 29
-            filter_size2 = 41
-            wave_1D = median_1D(wave_1D, filter_padding, filter_size1, filter_size2, wave_img, show_medianfilter, medianfilter_color)
-            # lowpass
-            filter_size1 = 40
-            filter_size2 = 50
-            wave_1D = lowpass_1D(wave_1D, wave_img, filter_padding, filter_size1, filter_size2, show_lowpassfilter, lowpass_color)
-            # crop filter padding
-            wave_1D = wave_1D[filter_padding:-filter_padding]
-            #wave_1D = (np.sin(np.linspace(0, np.pi*(1+(frame_num/100)), dimensions[1]))*100)+300
-            #print('sin', 1+(frame_num/100))
-            noise_gate_diff = 4000#np.sum(np.abs(wave_1D-prev_wave_1D))
-            # amount of activity
-            wave_activity = np.sum(binary_img)/(dimensions[0]*dimensions[1]*5)#np.sum(np.abs(wave_1D-prev_wave_1D))/dimensions[1]
-            prev_wave_1D = wave_1D
+            peak_indices = []
+        current_peak_id, peak_ids, active_ids, deleted_ids = peak_id_following(peak_indices, peak_ids, peak_prev_ids, current_peak_id, peak_max_change, max_n_peaks, empty_id, mask_left, mask_right)
+        peak_prev_ids = np.copy(peak_ids)
+        #if len(active_ids)+len(deleted_ids) > 0:
+        #    print('peaks', active_ids, deleted_ids)
+        display_peaks(active_ids, center_wave, wave_1D, wave_img, show_peaks, peakplus_color, peaknegative_color)
+        
+        # grid faders
+        num_faders = 10
+        faders = np.zeros(num_faders)
+        for i in range(num_faders):
+            faders[i] = wave_1D[i*int(input_size[1]/num_faders)]#/max_amp
+        display_faders(faders, num_faders, input_size[1], mask_left, mask_center, max_amp, wave_img, show_faders, fader_color)
+        # peak parms and stats
+        active_ids_a = np.array(active_ids)
+        numpeaks = len(active_ids)
+        if numpeaks > max_numpeaks:
+            max_numpeaks = numpeaks
+            print('new max numpeaks', max_numpeaks)
+        #print('numpeaks', numpeaks)
+        if numpeaks > 0 :
+            active_ids_sorted = active_ids_a[np.argsort(active_ids_a[:,1])] # sort by ascending x
+            if numpeaks > 1:
+                avg_x_distance = (active_ids_sorted[-1][1]-active_ids_sorted[0][1])/(numpeaks-1)
+            else: 
+                avg_x_distance = active_ids_sorted[0][1]
+            #print(f'P num {numpeaks} dist {avg_x_distance}')
+            x_prev = 0
+            y_prev = 0 
+            avg_x_movement = 0
+            for p in active_ids_sorted:
+                peak_id, x = p
+                x_movement = x-x_prev
+                avg_x_movement += x_movement
+                x_prev = x
+                y = (wave_1D[x]-center_wave[x])/(max_amp*0.5)
+                peak_amp = abs(y-y_prev)
+                y_prev = y
+                #print(f'p {peak_id}, x {x}, xd {x_distance} amp {peak_amp}')
+                # send peaks to Csound
+                x_movement /= (mask_right-mask_left)
+                osc_msg = float(peak_id), float(x), float(y), float(peak_amp), float(x_movement)
+                #print('active', peak_id)
+                osc_io.sendOSC('active_peaks', osc_msg) # send OSC back to client
+            # send peaks summary to Csound
+            avg_x_movement /= numpeaks
+            # normalize
+            avg_x_movement /= (mask_right-mask_left)
+            avg_x_distance /= (mask_right-mask_left)
+            # send
+            osc_msg = numpeaks, avg_x_distance, float(avg_x_movement)
+            osc_io.sendOSC('peaks_stats', osc_msg) # send OSC back to client
+        for peak_id in deleted_ids:
+            osc_msg = float(peak_id)
+            #print('delete', peak_id)
+            osc_io.sendOSC('deleted_peaks', osc_msg) # send OSC back to client
+        # other stats
+        if numpeaks > 0:
+            x_pos = active_ids_sorted[:,1]/(mask_right-mask_left)
+            for i in range(np.min((len(x_pos),32))):
+                osc_msg = i, x_pos[i]
+                osc_io.sendOSC('xpos', osc_msg) # send OSC back to client
+            x_distances = np.diff(active_ids_sorted[:,1])/(mask_right-mask_left)
+            for i in range(np.min((len(x_distances),32))):
+                osc_msg = i, x_distances[i]
+                osc_io.sendOSC('xdistance', osc_msg) # send OSC back to client
+        zero_crossings = np.where(np.abs((np.diff(np.sign(wave_1D-center_wave)))) > 0)/(mask_right-mask_left)
+        for i in range(np.min((len(zero_crossings[0]),32))):
+            osc_msg = i, (zero_crossings[0][i])
+            osc_io.sendOSC('zerocross', osc_msg) # send OSC back to client
+        zc_diff = np.diff(zero_crossings[0])
+        for i in range(np.min((len(zc_diff),32))):
+            osc_msg = i, zc_diff[i]
+            osc_io.sendOSC('zerocross_distance', osc_msg) # send OSC back to client
+        fft = np.fft.rfft(wave_1D) 
+        fftr = np.nan_to_num(np.clip(np.abs((20*np.log(np.real(fft)))), 0, 280))
+        #fftr = np.nan_to_num(np.abs((20*np.log(np.real(fft)))), nan=0.0, posinf=300, neginf=-300)
+        for i in range(16):
+            osc_msg = i, fftr[i]/280
+            #print('fftmax', np.max(fftr[:11]))
+            osc_io.sendOSC('fft_bin', osc_msg) # send OSC back to client
+        for i in range(len(faders)):
+            val = (mask_center[i]-faders[i])/(max_amp*0.5)
+            osc_msg = i, val, len(faders)
+            osc_io.sendOSC('faders', osc_msg) # send OSC back to client
+        osc_msg = float(wave_activity)
+        osc_io.sendOSC('activity', osc_msg) # send OSC back to client
+        
+        # Display result
+        output = cv2.add(current_frame, wave_img)    
+        if show_binary:
+            #binary_img_bgr = cv2.cvtColor(binary_img, cv2.COLOR_GRAY2BGR)
+            binary_img_bgra = cv2.cvtColor(binary_img, cv2.COLOR_GRAY2BGRA)
+            #print('bgra', np.max(binary_img_bgra))
+            #binary_img_bgra[..., 3] = 127 
+            output = cv2.cvtColor(output, cv2.COLOR_BGR2BGRA)
+            output = cv2.add((output*0.7).astype('uint8'), binary_img_bgra)    
+        if show_mask:
+            polyg_show = cv2.polylines(output,pts=[pts],isClosed=True, color=(255,0,0),thickness=2)
 
-            if noise_gate_diff < 3000: noise_gate = 0
-            else: noise_gate = 1
-            #print('noise_gate', noise_gate)
-            # find center              
-            center_wave = find_center_wave_regr(wave_1D, mask_left, mask_right)
-            # find peaks and peak ids
-            if noise_gate > 0:
-                peak_indices = find_peaks(wave_1D, center_wave, mask_left, dimensions[1], show_wavesign, wavesign_color, show_wavecenter, wavecenter_color)
-            else:
-                peak_indices = []
-            current_peak_id, peak_ids, active_ids, deleted_ids = peak_id_following(peak_indices, peak_ids, peak_prev_ids, current_peak_id, peak_max_change, max_n_peaks, empty_id, mask_left, mask_right)
-            peak_prev_ids = np.copy(peak_ids)
-            #if len(active_ids)+len(deleted_ids) > 0:
-            #    print('peaks', active_ids, deleted_ids)
-            display_peaks(active_ids, center_wave, wave_1D, wave_img, show_peaks, peakplus_color, peaknegative_color)
+        # add labels
+        v_offset = 20
+        legend_x = 15
+        legend_y = 15
+        if show_centroid:
+            cv2.circle(output, (legend_x,legend_y), 4, centroid_color, 4)
+            cv2.putText(output, 'centroid', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, centroid_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_fill_blanks:
+            cv2.circle(output, (legend_x,legend_y), 4, fill_blanks_color, 4)
+            cv2.putText(output, 'fill', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, fill_blanks_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_medianfilter:
+            cv2.circle(output, (legend_x,legend_y), 4, medianfilter_color, 4)
+            cv2.putText(output, 'median', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, medianfilter_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_lowpassfilter:
+            cv2.circle(output, (legend_x,legend_y), 4, lowpass_color, 4)
+            cv2.putText(output, 'lowpass', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, lowpass_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_wavecenter:
+            cv2.circle(output, (legend_x,legend_y), 4, wavecenter_color, 4)
+            cv2.putText(output, 'centerline', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, wavecenter_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_wavesign:
+            cv2.circle(output, (legend_x,legend_y), 4, wavesign_color, 4)
+            cv2.putText(output, 'wavesign', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, wavesign_color, 1, cv2.LINE_AA)
+            legend_y += v_offset
+        if show_fft:
+            for i in range(int(len(fftr)/8)):
+                if i < 11: fft_color = orange
+                elif i < 30: fft_color = green
+                else: fft_color = blue
+                cv2.circle(output, ((i*16), input_size[0]-int(fftr[i])), 4, fft_color, 4)
+        if show_stats and numpeaks > 0:
+            cv2.putText(output, f'numpeaks: {numpeaks}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            cv2.putText(output, f'avg_x_dist: {avg_x_distance:.2f}, avg movement {avg_x_movement:.2f}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            x_pos_disp = 'x_pos :'
+            for x in x_pos:
+                x_pos_disp = x_pos_disp + f'{x:.2f}' + ', '
+            cv2.putText(output, x_pos_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            x_dist_disp = 'x_dist :'
+            for x in x_distances:
+                x_dist_disp = x_dist_disp + f'{x:.2f}' + ', '
+            cv2.putText(output, x_dist_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            zc = ''
+            for z in zero_crossings[0]:
+                zc = zc + f'{z:.2f} ' 
+            cv2.putText(output, f'zero_cross: {zc}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            zc_disp = 'zc_dist: '
+            for i in zc_diff:
+                zc_disp = zc_disp + f'{i:.2f}' + ', '
+            cv2.putText(output, zc_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
+            legend_y += v_offset*2
+            cv2.putText(output, f'wave activity {wave_activity:.2f}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
             
-            # grid faders
-            num_faders = 10
-            faders = np.zeros(num_faders)
-            for i in range(num_faders):
-                faders[i] = wave_1D[i*int(dimensions[1]/num_faders)]#/max_amp
-            display_faders(faders, num_faders, dimensions[1], mask_left, mask_center, max_amp, wave_img, show_faders, fader_color)
-
-            # peak parms and stats
-            active_ids_a = np.array(active_ids)
-            numpeaks = len(active_ids)
-            if numpeaks > max_numpeaks:
-                max_numpeaks = numpeaks
-                print('new max numpeaks', max_numpeaks)
-            #print('numpeaks', numpeaks)
-            if numpeaks > 0 :
-                active_ids_sorted = active_ids_a[np.argsort(active_ids_a[:,1])] # sort by ascending x
-                if numpeaks > 1:
-                    avg_x_distance = (active_ids_sorted[-1][1]-active_ids_sorted[0][1])/(numpeaks-1)
-                else: 
-                    avg_x_distance = active_ids_sorted[0][1]
-                #print(f'P num {numpeaks} dist {avg_x_distance}')
-                x_prev = 0
-                y_prev = 0 
-                avg_x_movement = 0
-                for p in active_ids_sorted:
-                    peak_id, x = p
-                    x_movement = x-x_prev
-                    avg_x_movement += x_movement
-                    x_prev = x
-                    y = (wave_1D[x]-center_wave[x])/(max_amp*0.5)
-                    peak_amp = abs(y-y_prev)
-                    y_prev = y
-                    #print(f'p {peak_id}, x {x}, xd {x_distance} amp {peak_amp}')
-                    # send peaks to Csound
-                    x_movement /= (mask_right-mask_left)
-                    osc_msg = float(peak_id), float(x), float(y), float(peak_amp), float(x_movement)
-                    #print('active', peak_id)
-                    osc_io.sendOSC('active_peaks', osc_msg) # send OSC back to client
-                # send peaks summary to Csound
-                avg_x_movement /= numpeaks
-                # normalize
-                avg_x_movement /= (mask_right-mask_left)
-                avg_x_distance /= (mask_right-mask_left)
-                # send
-                osc_msg = numpeaks, avg_x_distance, float(avg_x_movement)
-                osc_io.sendOSC('peaks_stats', osc_msg) # send OSC back to client
-            for peak_id in deleted_ids:
-                osc_msg = float(peak_id)
-                #print('delete', peak_id)
-                osc_io.sendOSC('deleted_peaks', osc_msg) # send OSC back to client
-            # other stats
-            if numpeaks > 0:
-                x_pos = active_ids_sorted[:,1]/(mask_right-mask_left)
-                for i in range(np.min((len(x_pos),32))):
-                    osc_msg = i, x_pos[i]
-                    osc_io.sendOSC('xpos', osc_msg) # send OSC back to client
-                x_distances = np.diff(active_ids_sorted[:,1])/(mask_right-mask_left)
-                for i in range(np.min((len(x_distances),32))):
-                    osc_msg = i, x_distances[i]
-                    osc_io.sendOSC('xdistance', osc_msg) # send OSC back to client
-            zero_crossings = np.where(np.abs((np.diff(np.sign(wave_1D-center_wave)))) > 0)/(mask_right-mask_left)
-            for i in range(np.min((len(zero_crossings[0]),32))):
-                osc_msg = i, (zero_crossings[0][i])
-                osc_io.sendOSC('zerocross', osc_msg) # send OSC back to client
-            zc_diff = np.diff(zero_crossings[0])
-            for i in range(np.min((len(zc_diff),32))):
-                osc_msg = i, zc_diff[i]
-                osc_io.sendOSC('zerocross_distance', osc_msg) # send OSC back to client
-            fft = np.fft.rfft(wave_1D) 
-            fftr = np.nan_to_num(np.clip(np.abs((20*np.log(np.real(fft)))), 0, 280))
-            #fftr = np.nan_to_num(np.abs((20*np.log(np.real(fft)))), nan=0.0, posinf=300, neginf=-300)
-            for i in range(16):
-                osc_msg = i, fftr[i]/280
-                #print('fftmax', np.max(fftr[:11]))
-                osc_io.sendOSC('fft_bin', osc_msg) # send OSC back to client
-            for i in range(len(faders)):
-                val = (mask_center[i]-faders[i])/(max_amp*0.5)
-                osc_msg = i, val, len(faders)
-                osc_io.sendOSC('faders', osc_msg) # send OSC back to client
-            osc_msg = float(wave_activity)
-            osc_io.sendOSC('activity', osc_msg) # send OSC back to client
-            
-            
-
-            # Display result
-            output = cv2.add(current_frame, wave_img)    
-            if show_mask:
-                polyg_show = cv2.polylines(output,pts=[pts],isClosed=True, color=(255,0,0),thickness=2)
-            size_ = 640
-            scale = size_/np.shape(output)[1] # data array shape is y,x
-            size = (size_,int(np.shape(output)[0]*scale))
-            # add labels
-            v_offset = 20
-            legend_x = 15
-            legend_y = 15
-            if show_centroid:
-                cv2.circle(output, (legend_x,legend_y), 4, centroid_color, 4)
-                cv2.putText(output, 'centroid', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, centroid_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_fill_blanks:
-                cv2.circle(output, (legend_x,legend_y), 4, fill_blanks_color, 4)
-                cv2.putText(output, 'fill', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, fill_blanks_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_medianfilter:
-                cv2.circle(output, (legend_x,legend_y), 4, medianfilter_color, 4)
-                cv2.putText(output, 'median', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, medianfilter_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_lowpassfilter:
-                cv2.circle(output, (legend_x,legend_y), 4, lowpass_color, 4)
-                cv2.putText(output, 'lowpass', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, lowpass_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_wavecenter:
-                cv2.circle(output, (legend_x,legend_y), 4, wavecenter_color, 4)
-                cv2.putText(output, 'centerline', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, wavecenter_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_wavesign:
-                cv2.circle(output, (legend_x,legend_y), 4, wavesign_color, 4)
-                cv2.putText(output, 'wavesign', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, wavesign_color, 1, cv2.LINE_AA)
-                legend_y += v_offset
-            if show_fft:
-                for i in range(int(len(fftr)/8)):
-                    if i < 11: fft_color = orange
-                    elif i < 30: fft_color = green
-                    else: fft_color = blue
-                    cv2.circle(output, ((i*16), dimensions[0]-int(fftr[i])), 4, fft_color, 4)
-            if show_stats and numpeaks > 0:
-                cv2.putText(output, f'numpeaks: {numpeaks}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                cv2.putText(output, f'avg_x_dist: {avg_x_distance:.2f}, avg movement {avg_x_movement:.2f}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                x_pos_disp = 'x_pos :'
-                for x in x_pos:
-                    x_pos_disp = x_pos_disp + f'{x:.2f}' + ', '
-                cv2.putText(output, x_pos_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                x_dist_disp = 'x_dist :'
-                for x in x_distances:
-                    x_dist_disp = x_dist_disp + f'{x:.2f}' + ', '
-                cv2.putText(output, x_dist_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                zc = ''
-                for z in zero_crossings[0]:
-                    zc = zc + f'{z:.2f} ' 
-                cv2.putText(output, f'zero_cross: {zc}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                zc_disp = 'zc_dist: '
-                for i in zc_diff:
-                    zc_disp = zc_disp + f'{i:.2f}' + ', '
-                cv2.putText(output, zc_disp, (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                legend_y += v_offset*2
-                cv2.putText(output, f'wave activity {wave_activity:.2f}', (legend_x+15,legend_y+5), cv2.FONT_HERSHEY_SIMPLEX, 1, stats_color, 1, cv2.LINE_AA)
-                
-            output = cv2.resize(output, size)
-            cv2.imshow("Rope", output)
+        output = cv2.resize(output, display_size)
+        cv2.imshow("Rope", output)
         previous_frame = current_frame.copy()
         #cam.get_image(img)
         #current_frame = img.get_image_data_numpy()
-        #current_frame = cv2.flip(current_frame,-1)
         ret, current_frame = cap.read()
-        current_frame = cv2.flip(current_frame,-1)
+        if flip:
+            current_frame = cv2.flip(current_frame,-1)
         #if not ret:
         #    break
 

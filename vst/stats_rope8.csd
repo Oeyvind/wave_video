@@ -45,6 +45,9 @@ button channel("Grain2"),              bounds(430, 370, 70, 30), text("Grain2"),
 
 button channel("Noisebank"), bounds(480, 230, 70, 40), text("Noisbnk"), colour:0("black"), colour:1("green")
 
+  kactivity_thresh chnget "stop_activity_thresh"
+nslider channel("stop_activity_thresh"), bounds(590, 230, 40, 20), range(0.01, 1, 0.3), fontSize(14)
+label bounds(590, 247, 40, 18), fontSize(11), text("stop_thresh")
 button channel("Stopchord"), bounds(640, 230, 70, 40), text("Stopchord"), colour:0("black"), colour:1("green")
 nslider channel("detune_stopchord"), bounds(715, 230, 40, 20), range(0, 1, 0.1), fontSize(14)
 nslider channel("amp_stopchord"), bounds(715, 250, 40, 20), range(-96, -10, -30), fontSize(14)
@@ -874,14 +877,17 @@ instr 13
   kgraindur chnget "Gdur2"
   kamp = ampdbfs(kamp_dB)  
   imaxvoice = 8
+  kactivity_mod EnvFollow kactivity, 5, 1
   kpitchmod chnget "G2_pitchmod"
+  kpitchmod *= 1+(kactivity_mod*3)
+  kwavfreq *= 1+(kactivity_mod*2)
   kpitch_spread chnget "G2_pitch_spread"
   kratemod chnget "G2_ratemod"
   knumpeaks chnget "numpeaks"
   ; mod mapping
   kamp *= amp_activity
-  kdistribution = knumpeaks/10
-  kgrainrate *= (1+(kavg_x_movement*2))
+  kdistribution = knumpeaks/7
+  kgrainrate *= (1+(kavg_x_movement*2.5))
   kpitch_spread *= kmaxfaders
   kgraindur *= (kminfaders+1)
   a1,a2 Graincloud kwavfreq, kpitchmod, kpitch_spread, kgrainrate, kratemod, kdistribution, kgraindur, 0, imaxvoice
@@ -998,8 +1004,9 @@ instr 18
   kmax_activity init 0
   kmax_activity max kmax_activity, kwave_activity
   kwa_diff diff kwave_activity
+  kactivity_thresh chnget "stop_activity_thresh"
 
-  ksig = (kwa_diff < 0) && (kwave_activity < 0.1) && (kmax_activity> 0.3) ? 1 : 0
+  ksig = (kwa_diff < 0) && (kwave_activity < 0.1) && (kmax_activity > kactivity_thresh) ? 1 : 0
   ktrig trigger ksig, 0.5, 0
   
   kmax_x maxarray gkXpos
@@ -1080,10 +1087,10 @@ instr 20
   kwave_activity tonek kwave_activity, 1
   kmax_activity init 0
   kmax_activity max kmax_activity, kwave_activity
-
   kwa_diff diff kwave_activity
+  kactivity_thresh chnget "stop_activity_thresh"
 
-  ksig = (kwa_diff < 0) && (kwave_activity < 0.1)  && (kmax_activity> 0.3) ? 1 : 0
+  ksig = (kwa_diff < 0) && (kwave_activity < 0.1) && (kmax_activity > kactivity_thresh) ? 1 : 0
   ktrig trigger ksig, 0.5, 0
   knumpeaks chnget "numpeaks"
   knumpeaks delayk knumpeaks, 1
