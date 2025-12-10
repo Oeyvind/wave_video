@@ -11,8 +11,8 @@ timethen = time.time()
 cam = xiapi.Camera()
 cam.open_device()
 cam.set_imgdataformat('XI_RGB24')
-cam.set_exposure(60000)
-cam.set_gain(17)
+cam.set_exposure(10000)
+#cam.set_gain(2)
 cam.set_downsampling('XI_DWN_2x2')
 #create instance of Image to store image data and metadata
 img = xiapi.Image()
@@ -38,7 +38,7 @@ size = (size_,int(np.shape(current_frame)[0]*scale))
 # mask etc
 mask = np.zeros(dimensions[:2], dtype="uint8")
 pts = np.array([[int(dimensions[1]*0.05),int(dimensions[0]*0.1)],
-                [int(dimensions[1]*0.96),int(dimensions[0]*0.3)],
+                [int(dimensions[1]*0.96),int(dimensions[0]*0.1)],
                 [int(dimensions[1]*0.96),int(dimensions[0]*0.8)],
                 [int(dimensions[1]*0.05),int(dimensions[0]*0.8)]], np.int32)
 max_amp = np.max(pts[:,1])-np.min(pts[:,1])

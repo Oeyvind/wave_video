@@ -1,3 +1,39 @@
+* Fix
+    - fill in missing points:
+        - double check if we are using zero centered or pixel values in y axis
+        - consider transposing the wave to be centered around zero all the way
+            - might need to rewrite the find missing points
+                - y = 0 is then not empty, but use no.nonzero as indicator
+        - line 213: for i in range(dimensions[1]):
+            - should we just limit to mask_left - mask_right?
+        - should save previous detected points
+        - if no new point at x-location: use previous point
+        - then previous point could slowly fade back to zero over time (optional, or opt to hold)    
+    - peak detect and zero crosses
+        - set min threshold to avoid extraneous peaks when just small jitter
+    - zero cross i forhold til center of mask, eller i forhold til regressed center??
+        - bruke begge?
+        - display center mask hvis den brukes
+    - left and right fader jitters a lot
+
+    - wave hold
+        - if below noise gate:
+            - now it is holding
+            - implement lowwpass fall back to zero
+    - clean up optimiziation code
+
+
+
+* Optimization
+    - labels and printing 
+    - filtering median and lowpass
+
+* Linse 24-70 er ok på 2 meter avstand, hvis man zoomer helt ut
+* Linse 135 er veldig nært på
+* Finnes det en formel for vinkel/utsnitt pr linsetall?
+    - f.eks. 45 grader = 1.4 m bredt utsnitt på 1 meters avstand (?)
+
+
 * Action plans 09/2025
     * Sound instruments
         - what are interesting sounds ?
